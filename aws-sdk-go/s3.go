@@ -8,7 +8,9 @@ import (
 )
 
 func main() {
-	svc := s3.New(session.New(&aws.Config{Region: aws.String("us-west-2")}))
+	config := aws.NewConfig().WithRegion("ap-northeast-1")
+	sess, err := session.NewSession(config)
+	svc := s3.New(sess)
 	result, err := svc.ListBuckets(&s3.ListBucketsInput{})
 	if err != nil {
 		fmt.Println("Failed to list buckets", err)
