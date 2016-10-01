@@ -1,0 +1,6 @@
+hash: fcd9398baa77ffe7e8b6348949bb05dec4651675420bf7d558e8a570bb3779bb
+updated: 2016-10-02T02:56:45.480874882+09:00
+imports:
+- name: github.com/bluele/slack
+  version: 1f14901342cf5347555c2a6b0160d1a94f9c46ea
+testImports: []
