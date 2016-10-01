@@ -1,0 +1,3 @@
+package: github.com/gomesuit/larning-golang/table-output
+import:
+- package: github.com/olekukonko/tablewriter
