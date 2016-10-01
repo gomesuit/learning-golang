@@ -1,15 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"text/template"
 )
 
 func main() {
-	fmt.Println("vim-go")
 	sweaters := Inventory{"wool", 17}
-	tmpl, err := template.New("test").Parse("{{.Count}} items are made of {{.Material}}")
+	//tmpl, err := template.New("test").Parse("{{.Count}} items are made of {{.Material}}")
+	tmpl, err := template.ParseFiles("sample.txt")
 	if err != nil {
 		panic(err)
 	}
