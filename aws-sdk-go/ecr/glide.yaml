@@ -1,0 +1,5 @@
+package: github.com/gomesuit/larning-golang/aws-sdk-go/ecr
+import:
+- package: github.com/aws/aws-sdk-go
+  subpackages:
+  - service/ecr
