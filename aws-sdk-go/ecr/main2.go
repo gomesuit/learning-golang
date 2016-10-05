@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	repositoryName := "medical/web"
+	repositoryName := "sample/web"
 
 	sess, err := session.NewSession()
 	if err != nil {
