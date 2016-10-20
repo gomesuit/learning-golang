@@ -1,0 +1,5 @@
+package: github.com/gomesuit/larning-golang/go-github
+import:
+- package: github.com/google/go-github
+  subpackages:
+  - github
