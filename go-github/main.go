@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/google/go-github/github"
+	"golang.org/x/oauth2"
 )
 
 func main() {
@@ -16,7 +17,12 @@ func main() {
 }
 
 func getAllCommitId(owner, repo string) ([]string, error) {
-	client := github.NewClient(nil)
+
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: "xxxxxxxxxxxxxxxxxxxxxxxxxx"},
+	)
+	tc := oauth2.NewClient(oauth2.NoContext, ts)
+	client := github.NewClient(tc)
 	opt := &github.CommitsListOptions{}
 
 	commitids := []string{}
