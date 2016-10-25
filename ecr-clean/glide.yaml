@@ -1,0 +1,11 @@
+package: github.com/gomesuit/larning-golang/ecr-clean
+import:
+- package: github.com/aws/aws-sdk-go
+  subpackages:
+  - aws
+  - aws/session
+  - service/ecr
+- package: github.com/google/go-github
+  subpackages:
+  - github
+- package: golang.org/x/oauth2
