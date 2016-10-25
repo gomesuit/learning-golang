@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
@@ -8,7 +9,12 @@ import (
 )
 
 func main() {
-	commitids, err := getAllCommitId("gomesuit", "jansible")
+	var (
+		owner      = flag.String("o", "owner", "owner name")
+		repository = flag.String("r", "repository", "repositoryName")
+	)
+	flag.Parse()
+	commitids, err := getAllCommitId(*owner, *repository)
 	if err != nil {
 		panic(err)
 	}
