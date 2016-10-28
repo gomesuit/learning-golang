@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/ecr"
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
+	"log"
 	"os"
 )
 
@@ -22,21 +23,69 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	for _, commit := range commitids {
-		fmt.Println(commit)
-	}
+	//for _, commit := range commitids {
+	//	fmt.Println(commit)
+	//}
 
 	imageids, err := getAllImageId(*repositoryName)
 	if err != nil {
 		panic(err)
 	}
-	for _, img := range imageids {
+
+	deleteImgs := getDeleteImgs(imageids, commitids)
+	//fmt.Println(deleteImgs)
+
+	sess, err := session.NewSession()
+	if err != nil {
+		panic(err)
+	}
+	config := aws.NewConfig().WithRegion("ap-northeast-1")
+	svc := ecr.New(sess, config)
+
+	i := 0
+	for i = 0; i < int(len(deleteImgs)/100); i++ {
+		err := deleteImages(svc, *repositoryName, deleteImgs[i*100:(i+1)*100])
+
+		if err != nil {
+			fmt.Errorf("deleting images in repo %v: %v", *repositoryName, err)
+			return
+		}
+	}
+
+	err = deleteImages(svc, *repositoryName, deleteImgs[i*100:])
+
+	if err != nil {
+		fmt.Errorf("deleting images in repo %v: %v", *repositoryName, err)
+		return
+	}
+
+	log.Printf("deleted %v images in repo %v", len(deleteImgs), *repositoryName)
+}
+
+func deleteImages(ecrCli *ecr.ECR, repoName string, images []*ecr.ImageIdentifier) error {
+	_, err := ecrCli.BatchDeleteImage(&ecr.BatchDeleteImageInput{
+		RepositoryName: aws.String(repoName),
+		ImageIds:       images,
+	})
+	if err != nil {
+		return fmt.Errorf("deleting images in repo %v: %v", repoName, err)
+	}
+
+	return nil
+}
+
+func getDeleteImgs(imgs []*ecr.ImageIdentifier, commitids []string) []*ecr.ImageIdentifier {
+	deleteImgs := []*ecr.ImageIdentifier{}
+	for _, img := range imgs {
 		if img.ImageTag == nil {
+			deleteImgs = append(deleteImgs, img)
 			continue
 		}
-		fmt.Println(img)
-		fmt.Println(isExists(commitids, *img.ImageTag))
+		if !isExists(commitids, *img.ImageTag) {
+			deleteImgs = append(deleteImgs, img)
+		}
 	}
+	return deleteImgs
 }
 
 func isExists(commitids []string, commitid string) bool {
