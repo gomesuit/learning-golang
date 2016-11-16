@@ -44,11 +44,18 @@ func main() {
 
 	i := 0
 	for i = 0; i < int(len(deleteImgs)/100); i++ {
+		fmt.Printf("[%d~%d]", i*100, (i+1)*100)
 		err := deleteImages(svc, *repositoryName, deleteImgs[i*100:(i+1)*100])
-
 		if err != nil {
 			fmt.Errorf("deleting images in repo %v: %v", *repositoryName, err)
 			return
+		}
+		for _, img := range deleteImgs[i*100 : (i+1)*100] {
+			if img.ImageTag == nil {
+				continue
+			} else {
+				fmt.Println("delete comp:" + *img.ImageTag)
+			}
 		}
 	}
 
