@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-    // ルートURL("/")に対するGETリクエストを処理する関数を定義
+	// ルートURL("/")に対するGETリクエストを処理する関数を定義
 	web.Get("/", func(ctx *context.Context) {
 		ctx.WriteString("Hello, Beego!")
 	})
